@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Tracker</title>  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.png">
+</head>
+<body>
+  <nav>
+  <div class="hamburger">
+    <div class="bar bar1"></div>
+    <div class="bar bar2"></div>
+    <div class="bar bar3"></div>
+  </div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="explorer.html">Book Explorer</a></li>
+    <li><a href="tracker.html">Progress Tracker</a></li>
+    <li><a href="recommender.html">Recommender</a></li>
+    <li><a href="flow.html">Reading Flow</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+  </ul>
+</nav>
+
+  <section>
+    <form id="tracker-form">
+      <label>Total Pages: <input type="number" id="total" required></label>
+      <label>Pages Read: <input type="number" id="read" required></label>
+      <label>Daily Speed (pages/day): <input type="number" id="speed" required></label>
+      <button type="submit">Calculate</button>
+    </form>
+    <div id="results">
+      <p>Progress: <span id="percent"></span>%</p>
+      <div class="progress"><div class="progress-bar" id="bar"></div></div>
+      <p>Estimated Finish: <span id="finish"></span> days</p>
+      <button id="save">Save Progress</button>
+    </div>
+  </section>
+  <script src="js/script.js"></script>
+  <script>
+    document.getElementById('tracker-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const total = parseInt(document.getElementById('total').value);
+      const read = parseInt(document.getElementById('read').value);
+      const speed = parseInt(document.getElementById('speed').value);
+      const percent = (read / total) * 100;
+      const remaining = total - read;
+      const finish = Math.ceil(remaining / speed);
+      document.getElementById('percent').textContent = percent.toFixed(2);
+      document.getElementById('bar').style.width = `${percent}%`;
+      document.getElementById('finish').textContent = finish;
+    });
+
+    document.getElementById('save').addEventListener('click', () => {
+      const progress = { total: document.getElementById('total').value, read: document.getElementById('read').value };
+      saveToLocal('progress', progress);
+      alert('Saved!');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recommender</title>  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.png">
+</head>
+<body>
+  <nav>
+  <div class="hamburger">
+    <div class="bar bar1"></div>
+    <div class="bar bar2"></div>
+    <div class="bar bar3"></div>
+  </div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="explorer.html">Book Explorer</a></li>
+    <li><a href="tracker.html">Progress Tracker</a></li>
+    <li><a href="recommender.html">Recommender</a></li>
+    <li><a href="flow.html">Reading Flow</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+  </ul>
+</nav>
+
+  <section>
+    <select id="genre"><option>Fiction</option><option>Sci-Fi</option><option>Fantasy</option></select>
+    <select id="length"><option>Short</option><option>Medium</option><option>Long</option></select>
+    <button id="recommend">Recommend</button>
+    <div id="rec" style="animation: fadeIn 1s;"></div>
+    <button id="again" style="display:none;">Pick Again</button>
+    <button id="save-rec" style="display:none;">Save to List</button>
+  </section>
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+<script>
+  function getRandomBook(genre, length) {
+    const filtered = books.filter(b => b.genre === genre && b.length === length);
+    return filtered[Math.floor(Math.random() * filtered.length)] || {title: 'No match', author: '', image: '', synopsis: ''};
+  }
+
+  document.getElementById('recommend').addEventListener('click', () => {
+    const genre = document.getElementById('genre').value;
+    const length = document.getElementById('length').value;
+    const book = getRandomBook(genre, length);
+    
+    document.getElementById('rec').innerHTML = `
+      <div class="book-card" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left;">
+        <div>
+          <p>${book.synopsis}</p>
+        </div>
+        <div style="text-align: center;">
+          <img src="${book.image}" alt="${book.title}">
+          <h3>${book.title}</h3>
+          <p>${book.author}</p>
+        </div>
+      </div>
+    `;
+    document.getElementById('again').style.display = 'block';
+    document.getElementById('save-rec').style.display = 'block';
+  });
+
+  document.getElementById('again').addEventListener('click', () => {
+    document.getElementById('again').style.animation = 'fadeIn 0.5s';
+    document.getElementById('recommend').click();
+  });
+
+  document.getElementById('save-rec').addEventListener('click', () => {
+    let list = JSON.parse(localStorage.getItem('readingList')) || [];
+    list.push(document.getElementById('rec').querySelector('h3').textContent);
+    saveToLocal('readingList', list);
+    alert('Saved to list!');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Explorer</title>  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.png">
+</head>
+<body>
+  
+   <nav>
+  <div class="hamburger">
+    <div class="bar bar1"></div>
+    <div class="bar bar2"></div>
+    <div class="bar bar3"></div>
+  </div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="explorer.html">Book Explorer</a></li>
+    <li><a href="tracker.html">Progress Tracker</a></li>
+    <li><a href="recommender.html">Recommender</a></li>
+    <li><a href="flow.html">Reading Flow</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+  </ul>
+</nav>
+  <section>
+    <input type="text" id="search" placeholder="Search by title/author/genre">
+    <div class="book-grid" id="book-grid"></div>
+  </section>
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2 id="modal-title"></h2>
+      <p id="modal-synopsis"></p>
+      
+      <h3>Prequels:</h3>
+      <ul id="modal-prequels"></ul>
+      
+      <h3>Sequels:</h3>
+      <ul id="modal-sequels"></ul>
+      <table id="modal-reviews"><tr><th>User</th><th>Rating</th><th>Comment</th></tr></table>
+      <button onclick="document.getElementById('modal').style.display='none'">Close</button>
+    </div>
+  </div>
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    function displayBooks(filteredBooks = books) {
+      const grid = document.getElementById('book-grid');
+      grid.innerHTML = '';
+      filteredBooks.forEach(book => {
+        const card = document.createElement('div');
+        card.classList.add('book-card');
+        card.innerHTML = `<img src="${book.image}" alt="${book.title}"><h3>${book.title}</h3><p>${book.author}</p>`;
+        card.addEventListener('click', () => showModal(book));
+        grid.appendChild(card);
+      });
+    
+    }
+    displayBooks();
+
+    // Search/Filter
+    document.getElementById('search').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      const filtered = books.filter(b => b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term) || b.genre.toLowerCase().includes(term));
+      displayBooks(filtered);
+    });
+
+    // Modal
+    function showModal(book) {
+      document.getElementById('modal-title').textContent = book.title;
+      document.getElementById('modal-synopsis').textContent = book.synopsis;
+
+      // Prequels
+      const preqList = document.getElementById('modal-prequels');
+      preqList.innerHTML = '';
+      book.prequels.forEach(preq => {
+        const li = document.createElement('li');
+        li.textContent = preq;
+        preqList.appendChild(li);
+      });
+
+      // Sequels
+      const seqList = document.getElementById('modal-sequels');
+      seqList.innerHTML = '';
+      book.sequels.forEach(seq => {
+        const li = document.createElement('li');
+        li.textContent = seq;
+        seqList.appendChild(li);
+      });
+
+      //Reviews
+      const table = document.getElementById('modal-reviews');
+      table.innerHTML = '<tr><th>User</th><th>Rating</th><th>Comment</th></tr>';
+      book.reviews.forEach(rev => {
+        const row = table.insertRow();
+        row.innerHTML = `<td>${rev.user}</td><td>${rev.rating}</td><td>${rev.comment}</td>`;
+      });
+
+      document.getElementById('modal').style.display = 'flex';
+    }
+  </script>
+</body>
+</html>

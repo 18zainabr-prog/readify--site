@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Flow</title>  
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.png">
+</head>
+<body>
+  <nav>
+  <div class="hamburger">
+    <div class="bar bar1"></div>
+    <div class="bar bar2"></div>
+    <div class="bar bar3"></div>
+  </div>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="explorer.html">Book Explorer</a></li>
+    <li><a href="tracker.html">Progress Tracker</a></li>
+    <li><a href="recommender.html">Recommender</a></li>
+    <li><a href="flow.html">Reading Flow</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
+  </ul>
+</nav>
+
+  <section>
+    <h2>Cozy Sounds</h2>
+    <button onclick="toggleSound('rain')">Rain (On/Off)</button>
+    <audio id="rain" loop src="Images/rain.wav"></audio> 
+    <h2>Completed Books</h2>
+    <ul id="completed"></ul>
+    <button onclick="addCompleted()">Mark Book Completed</button>
+  </section>
+  <script src="js/script.js"></script>
+  <script>
+    function toggleSound(id) {
+      const audio = document.getElementById(id);
+      if (audio.paused) audio.play(); else audio.pause();
+    }
+
+    function addCompleted() {
+      const book = prompt('Enter completed book title:');
+      if (book) {
+        let completed = JSON.parse(localStorage.getItem('completed')) || [];
+        completed.push(book);
+        saveToLocal('completed', completed);
+        displayCompleted();
+      }
+    }
+
+    function displayCompleted() {
+      const list = document.getElementById('completed');
+      list.innerHTML = '';
+      const completed = JSON.parse(localStorage.getItem('completed')) || [];
+      completed.forEach(b => { const li = document.createElement('li'); li.textContent = b; list.appendChild(li); });
+    }
+    displayCompleted();
+  </script>
+</body>
+</html>

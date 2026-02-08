@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Readify Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/favicon.png">
+</head>
+<body>
+  <nav>
+    <img src="images/favicon.png" alt="Readify Logo" class="logo"> 
+  <div class="hamburger"><div class="bar bar1"></div><div class="bar bar2"></div><div class="bar bar3"></div></div>
+  <ul>
+    <div class="hamburger"><div class="bar bar1"></div><div class="bar bar2"></div><div class="bar bar3"></div></div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="explorer.html">Book Explorer</a></li>
+      <li><a href="tracker.html">Progress Tracker</a></li>
+      <li><a href="recommender.html">Recommender</a></li>
+      <li><a href="flow.html">Reading Flow</a></li>
+      <li><a href="feedback.html">Feedback</a></li>
+    </ul>
+  </nav>
+  <section class="hero">
+    <div class="hero-text"><h1 id="quote">Loading quote...</h1></div>
+    <div>
+        <img src="images/red-light-watching-open-book.jpg" alt="Book Illustration" style="max-width: 100%; height: auto; object-fit: contain; border-radius: 10px;">
+    </div>
+  </section>
+  <section>
+    <h2>Author of the Day: <span id="author"></span></h2>
+  </section>
+  <footer>
+  <p>Links: 
+    <a href="index.html">Home</a> | 
+    <a href="explorer.html">Book Explorer</a> | 
+    <a href="tracker.html">Progress Tracker</a> | 
+    <a href="recommender.html">Recommender</a> | 
+    <a href="flow.html">Reading Flow</a> | 
+    <a href="feedback.html">Feedback</a>
+  </p>
+  <form id="newsletter">
+    <input type="email" id="email" placeholder="Subscribe to newsletter" required>
+    <button type="submit">Subscribe</button>
+  </form>
+  <p>&copy; 2025 Readify. All rights reserved.</p>
+</footer>
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    // Quote rotator
+    let quoteIndex = 0;
+    function rotateQuote() {
+      document.getElementById('quote').textContent = quotes[quoteIndex];
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+    }
+    setInterval(rotateQuote, 5000);
+    rotateQuote();
+
+    // Author of the day 
+    const day = new Date().getDate() % authors.length;
+    document.getElementById('author').textContent = authors[day];
+
+    // Newsletter
+    document.getElementById('newsletter').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      saveToLocal('newsletter', email);
+      alert('Subscribed!');
+    });
+  </script>
+</body>
+</html>
